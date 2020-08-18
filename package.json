@@ -1,6 +1,6 @@
 {
   "name": "openpromise",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A family of Promise based objects that can be resolved/failed remotely and/or multiple times",
   "main": "index.js",
   "scripts": {
@@ -23,10 +23,10 @@
     "remote"
   ],
   "author": "CABrouwers",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/CABrouwers/openpromise/issues"
   },
-  "homepage": "https://github.com/CABrouwers/openpromise#readme",
+  "homepage": "https://github.com/CABrouwers/openpromisee#readme",
   "dependencies": {}
 }
