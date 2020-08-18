@@ -4,4 +4,4 @@
 .git/
 bin/
 obj/
-*.npmignore
+*.gitignore

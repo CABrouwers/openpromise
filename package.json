@@ -1,0 +1,32 @@
+{
+  "name": "openpromise",
+  "version": "2.2.1",
+  "description": "A family of Promise based objects that can be resolved/failed remotely and/or multiple times",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\\\\\"Error: no test specified\\\\\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CABrouwers/repeatable-promise.git"
+  },
+  "keywords": [
+    "promise",
+    "async",
+    "events",
+    "defer",
+    "repeatable",
+    "call-back",
+    "queue",
+    "timer",
+    "timeout",
+    "remote"
+  ],
+  "author": "CABrouwers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CABrouwers/repeatable-promise/issues"
+  },
+  "homepage": "https://github.com/CABrouwers/repeatable-promise#readme",
+  "dependencies": {}
+}
