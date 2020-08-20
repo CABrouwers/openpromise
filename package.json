@@ -1,6 +1,6 @@
 {
   "name": "openpromise",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "A family of Promise based objects that can be resolved/failed remotely and/or multiple times",
   "main": "index.js",
   "scripts": {

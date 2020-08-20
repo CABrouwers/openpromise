@@ -26,7 +26,9 @@ function Defer() {
 
 
 function Delay(d, val) {
+
     var df = new Defer()
+
     var timer
     df.finally(() => { clearTimeout(timer) }).catch(() => { })
     df.reset = (d, val) => {
@@ -41,6 +43,7 @@ function Delay(d, val) {
 
 
 function TimeOut(d, val) {
+
     var df = new Defer()
     var tm
     df.finally(() => { clearTimeout(tm) }).catch(() => { })
@@ -55,6 +58,7 @@ function TimeOut(d, val) {
 class Queue {
 
     constructor(f) {
+
         this._Queue = Promise.resolve()
     }
 
@@ -78,6 +82,7 @@ class Queue {
 class _Cycler {
 
     constructor(f) {
+
         this._promise = new Defer()
     }
 
@@ -139,7 +144,7 @@ class _Cycler {
 
 class Cycle {
     constructor(f) {
-
+    
         this._prom = new Defer()
         this._queue = new Queue()
         this._cycler = new _Cycler()
@@ -176,6 +181,7 @@ class Cycle {
     }
 
     fail(pl) {
+        var me = this
         return this._queue.enQueue(() => {
             me._cycler.fail(pl)
             me._prom.fail(pl)
@@ -205,10 +211,11 @@ class Cycle {
 
 
 
-function Repeater(d) {
+function Repeater(d, f) {
+
     var cycle = new Cycle()
     console.debug(cycle)
-    var timer = setInterval(() => { cycle.repeat() }, d)
+    var timer = setInterval(() => { cycle.repeat(f ? f() : undefined) }, d)
     cycle.then(() => { clearInterval(timer) })
     return cycle
 }
@@ -216,8 +223,10 @@ function Repeater(d) {
 
 
 
+
 class Flipflop {
     constructor(f) {
+
         this._defer = new Defer()
     }
 
@@ -251,6 +260,8 @@ class Flipflop {
 
 
 function untilResolved(f, n, wait) {
+
+
     let ret = new Defer()
     f()
         .then((v) => { ret.resolve(v) })
