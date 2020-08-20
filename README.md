@@ -1,7 +1,7 @@
 # openpromise
 
 
-The goal is of this module is to simplify and extend the use of the native Promise mechanism. It includes variation objects that can be used to control the flow of a program or communicate between different parts of a program asynchronously.   These objects leverage the native promise mechanism while avoiding the convoluted semantic of Promise definition.  All objects are or behave like **Promise**s, can be chained like **Promise**s and allow the use of the ``then`` , ``catch`` and ``finally`` construct
+The goal is of this module is to simplify and extend the use of the native Promise mechanism. It includes various objects that can be used to control the flow of a program or communicate between different parts of a program asynchronously.   These objects leverage the native promise mechanism while avoiding the convoluted syntax of Promise definition.  All objects are or behave like **Promise**s, can be chained like **Promise**s and allow the use of the ``then`` , ``catch`` and ``finally`` construct
 
 The objects provided are:
 |  |  |
