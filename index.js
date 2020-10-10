@@ -1,4 +1,3 @@
-
 class OpenPromise extends Promise {
 
     constructor(f) {
@@ -7,9 +6,17 @@ class OpenPromise extends Promise {
 
         super((res, rej) => {
 
-            resolve = (v) => { this.resolved = true; res(v) }
-            reject = (v) => { this.rejected = true; rej(v) }
-            if (f) { f(resolve, reject) }
+            resolve = (v) => {
+                this.resolved = true;
+                res(v)
+            }
+            reject = (v) => {
+                this.rejected = true;
+                rej(v)
+            }
+            if (f) {
+                f(resolve, reject)
+            }
         })
 
         this.resolve = resolve
@@ -24,16 +31,21 @@ function Defer() {
 }
 
 
-
 function Delay(d, val) {
 
     var df = new Defer()
 
     var timer
-    df.finally(() => { clearTimeout(timer) }).catch(() => { })
+    df.finally(() => {
+        clearTimeout(timer)
+    }).catch(() => { })
     df.reset = (d, val) => {
         clearTimeout(timer)
-        if (d || d == 0) { timer = setTimeout(() => { df.resolve(val) }, d) }
+        if (d || d == 0) {
+            timer = setTimeout(() => {
+                df.resolve(val)
+            }, d)
+        }
     }
     df.reset(d, val)
     return df
@@ -41,15 +53,20 @@ function Delay(d, val) {
 }
 
 
-
 function TimeOut(d, val) {
 
     var df = new Defer()
     var tm
-    df.finally(() => { clearTimeout(tm) }).catch(() => { })
+    df.finally(() => {
+        clearTimeout(tm)
+    }).catch(() => { })
     df.reset = (d, val) => {
         clearTimeout(tm)
-        if (d || d == 0) { tm = setTimeout(() => { df.fail(val) }, d) }
+        if (d || d == 0) {
+            tm = setTimeout(() => {
+                df.fail(val)
+            }, d)
+        }
     }
     df.reset(d, val)
     return df
@@ -62,13 +79,14 @@ class Queue {
         this._Queue = Promise.resolve()
     }
 
-    enQueue = (f) => {
+    enQueue(f) {
         var df = new Defer()
         df.catch(() => { })
         if (f instanceof Promise) {
-            this._Queue = this._Queue.then(() => { return f }).then(df.resolve, df.fail)
-        }
-        else {
+            this._Queue = this._Queue.then(() => {
+                return f
+            }).then(df.resolve, df.fail)
+        } else {
             this._Queue = this._Queue.then(f).then(df.resolve, df.fail)
         }
         return df
@@ -78,10 +96,9 @@ class Queue {
 }
 
 
-
 class _Cycler {
 
-    constructor(f) {
+    constructor() {
 
         this._promise = new Defer()
     }
@@ -103,17 +120,22 @@ class _Cycler {
 
 
     reset(pl, f, tracker, repo) {
-        if (repo.kill) { return }
+        if (repo.kill) {
+            return
+        }
         f(pl)
         this._successor._promise
             .then((pl) => {
 
                 if (this._successor._successor) {
                     this._successor.reset(pl, f, tracker, repo)
+                } else {
+                    tracker.resolve(pl)
                 }
-                else { tracker.resolve(pl) }
             })
-            .catch((pl) => { tracker.reject(pl) })
+            .catch((pl) => {
+                tracker.reject(pl)
+            })
     }
 
     thenAgain(f) {
@@ -122,29 +144,34 @@ class _Cycler {
         let repo = {}
 
         tracker
-            .then(() => { repo.kill = true })
+            .then(() => {
+                repo.kill = true
+            })
             .catch(() => { })
         this._promise
             .then((pl) => {
                 if (this._successor) {
                     this.reset(pl, f, tracker, repo)
+                } else {
+                    tracker.resolve(pl)
                 }
-                else { tracker.resolve(pl) }
             })
-            .catch((pl) => { tracker.reject(pl) })
+            .catch((pl) => {
+                tracker.reject(pl)
+            })
         return tracker
     }
 
-    thenOnce(f) { return this._promise.then(f) }
+    thenOnce(f) {
+        return this._promise.then(f)
+    }
 
 }
 
 
-
-
 class Cycle {
-    constructor(f) {
-    
+    constructor() {
+
         this._prom = new Defer()
         this._queue = new Queue()
         this._cycler = new _Cycler()
@@ -160,13 +187,11 @@ class Cycle {
     }
 
     thenAgain(f) {
-        var me = this
         return this._cycler.thenAgain(f)
     }
 
 
     thenOnce(f) {
-        var me = this
         return this._cycler.thenOnce(f)
     }
 
@@ -196,32 +221,35 @@ class Cycle {
 
     catch(f) {
         return this._prom.catch(f)
-    }
-
-
-    finally(f) {
+    } finally(f) {
         return this._prom.finally(f)
     }
 
-    get resolved() { return this._prom.resolved }
-    get rejected() { return this._prom.rejected }
-    get failed() { return this._prom.failed }
+    get resolved() {
+        return this._prom.resolved
+    }
+    get rejected() {
+        return this._prom.rejected
+    }
+    get failed() {
+        return this._prom.failed
+    }
 
 }
-
 
 
 function Repeater(d, f) {
 
     var cycle = new Cycle()
     console.debug(cycle)
-    var timer = setInterval(() => { cycle.repeat(f ? f() : undefined) }, d)
-    cycle.then(() => { clearInterval(timer) })
+    var timer = setInterval(() => {
+        cycle.repeat(f ? f() : undefined)
+    }, d)
+    cycle.then(() => {
+        clearInterval(timer)
+    })
     return cycle
 }
-
-
-
 
 
 class Flipflop {
@@ -231,12 +259,16 @@ class Flipflop {
     }
 
     on() {
-        if (this._defer.rejected) { this._defer = new Defer() }
+        if (this._defer.rejected) {
+            this._defer = new Defer()
+        }
         this._defer.resolve()
     }
 
     off() {
-        if (this._defer.resolved || this._defer.rejected) { this._defer = new Defer() }
+        if (this._defer.resolved || this._defer.rejected) {
+            this._defer = new Defer()
+        }
     }
 
 
@@ -245,16 +277,28 @@ class Flipflop {
     }
 
     flip() {
-        if (this._defer.resolved) { this._defer = new Defer() }
-        else { this._defer.resolve() }
+        if (this._defer.resolved) {
+            this._defer = new Defer()
+        } else {
+            this._defer.resolve()
+        }
     }
 
-    then(f) { return this._defer.then(f) }
-    catch(f) { return this._defer.catch(f) }
-    finally(f) { return this._defer.finally(f) }
+    then(f) {
+        return this._defer.then(f)
+    }
+    catch(f) {
+        return this._defer.catch(f)
+    } finally(f) {
+        return this._defer.finally(f)
+    }
 
-    get resolved() { return this._defer.resolved }
-    get failed() { return this._defer.failed }
+    get resolved() {
+        return this._defer.resolved
+    }
+    get failed() {
+        return this._defer.failed
+    }
 
 }
 
@@ -264,28 +308,37 @@ function untilResolved(f, n, wait) {
 
     let ret = new Defer()
     f()
-        .then((v) => { ret.resolve(v) })
+        .then((v) => {
+            ret.resolve(v)
+        })
         .catch((v) => {
-            if (n && n <= 1) { ret.fail(v) }
-            else {
+            if (n && n <= 1) {
+                ret.fail(v)
+            } else {
                 if (wait) {
                     let dl = new Delay(wait)
                     dl.then(() => {
                         untilResolved(f, n ? n - 1 : undefined, wait)
-                            .then((v) => { ret.resolve(v) })
-                            .catch((v) => { ret.fail(v) })
+                            .then((v) => {
+                                ret.resolve(v)
+                            })
+                            .catch((v) => {
+                                ret.fail(v)
+                            })
                     })
-                }
-                else {
+                } else {
                     untilResolved(f, n ? n - 1 : undefined)
-                        .then((v) => { ret.resolve(v) })
-                        .catch((v) => { ret.fail(v) })
+                        .then((v) => {
+                            ret.resolve(v)
+                        })
+                        .catch((v) => {
+                            ret.fail(v)
+                        })
                 }
             }
         })
     return ret
 }
-
 
 
 module.exports = {
