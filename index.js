@@ -340,17 +340,20 @@ function untilResolved(f, n, wait) {
     return ret
 }
 
-
-module.exports = {
-    OpenPromise,
-    Defer,
-    Cycle,
-    Delay,
-    TimeOut,
-    Queue,
-    Repeater,
-    Flipflop,
-    untilResolved
+try {
+    module.exports = {
+        OpenPromise,
+        Defer,
+        Cycle,
+        Delay,
+        TimeOut,
+        Queue,
+        Repeater,
+        Flipflop,
+        untilResolved
+    }
 }
+catch (e) { }
+
 
 
